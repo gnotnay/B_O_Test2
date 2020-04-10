@@ -3,7 +3,7 @@ import { ThemeProvider } from "@material-ui/styles";
 import { CssBaseline, createMuiTheme } from "@material-ui/core";
 import "./App.css";
 import Menu from "./components/Menu";
-import Table from "./components/Table";
+import PanelContainer from "./components/PanelContainer";
 const theme = createMuiTheme({
   palette: {
     type: "dark",
@@ -16,9 +16,9 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <header>
-          <Menu></Menu>
+          <Menu />
         </header>
-        <Table></Table>
+        <PanelContainer />
       </ThemeProvider>
     </div>
   );

@@ -5,8 +5,10 @@ import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import LabelImportantTwoToneIcon from "@material-ui/icons/LabelImportantTwoTone";
-import PanelList from "./PanelList";
+import TurnedInTwoToneIcon from '@material-ui/icons/TurnedInTwoTone';
+import DetailList from "./DetailList";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,15 +16,18 @@ const useStyles = makeStyles((theme) => ({
   },
   heading: {
     fontSize: theme.typography.pxToRem(17),
-    fontWeight: theme.typography.fontWeightRegular,
+    flexBasis: "20%",
+    flexShrink: 0,
+  },
+  secondaryHeading: {
+    fontSize: theme.typography.pxToRem(16),
+    color: theme.palette.text.secondary,
   },
 }));
 
 export default function Panel(props) {
-  // const [block, setBlock] = useState(null);
   const classes = useStyles();
-  // console.log("Panel", props.block);
-  // countActions(props.block.last_irreversible_block_id);
+
   return (
     <div className={classes.root}>
       <ExpansionPanel>
@@ -31,18 +36,25 @@ export default function Panel(props) {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <LabelImportantTwoToneIcon></LabelImportantTwoToneIcon>
-          <Typography className={classes.heading}>
-            <b>Block ID:</b> {props.block.last_irreversible_block_id}
-          </Typography>
+          <TurnedInTwoToneIcon />
+          <Card className={classes.root}>
+            <CardContent>
+              <Typography className={classes.heading} align="left">
+                <b>Block ID:</b> {props.block.last_irreversible_block_id}
+              </Typography>
+              <Typography className={classes.heading} align="left">
+                <b>Timestamp:</b> {props.timestamp}
+              </Typography>
+              <Typography className={classes.heading} align="left">
+                <b>Actions:</b> {props.numOfActions}
+              </Typography>
+            </CardContent>
+          </Card>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          {/* <Typography> */}
-          <PanelList
-            timeStamp={props.block.head_block_time.toString()}
-            blockId={props.block.last_irreversible_block_id}
-          ></PanelList>
-          {/* </Typography> */}
+          <DetailList
+            blockDetails={props.block}
+          ></DetailList>
         </ExpansionPanelDetails>
       </ExpansionPanel>
     </div>
