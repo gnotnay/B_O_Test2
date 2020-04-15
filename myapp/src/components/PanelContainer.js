@@ -3,6 +3,7 @@ import axios from "axios";
 import BlockPanel from "./BlockPanel";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 class PanelContainer extends Component {
   constructor(props) {
@@ -86,8 +87,13 @@ class PanelContainer extends Component {
         });
       })
       .catch((err) => {
-        currBlocksMap.set(currBlockId, "Not available");
-        currActionsMap.set(currBlockId, "Not available");
+        currBlocksMap.set(currBlockId, "OOPS! Data is unavailable");
+        currActionsMap.set(currBlockId, "OOPS! Data is unavailable");
+
+        // while (currBlocksMap.size > this.state.capacity) {
+        //   currBlocksMap.delete(blocksMapKeys.next().value);
+        //   currActionsMap.delete(actionsMapKeys.next().value);
+        // }
 
         this.setState({
           ...this.state,
@@ -119,7 +125,7 @@ class PanelContainer extends Component {
         <div>
           <div>{this.panels}</div>
           {this.state.buttonClicked ? (
-            <CircularProgress />
+            <LinearProgress variant="query" />
           ) : (
             <Button
               variant="contained"

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
@@ -27,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BlockPanel(props) {
   const classes = useStyles();
-  // console.log("props.block", props.block);
   return (
     <div className={classes.root}>
       <ExpansionPanel>
@@ -41,17 +40,17 @@ export default function BlockPanel(props) {
             <CardContent>
               <Typography className={classes.heading} align="left">
                 <b>Block ID:</b>{" "}
-                {props.block.id ? props.block.id : "Loading......"}
+                {props.block.id ? props.block.id : "OOPS! Data currently not available"}
               </Typography>
               <Typography className={classes.heading} align="left">
                 <b>Timestamp:</b>{" "}
                 {props.block.timestamp
                   ? props.block.timestamp
-                  : "Loading......"}
+                  : "OOPS! Data currently not available"}
               </Typography>
               <Typography className={classes.heading} align="left">
                 <b>Actions:</b>{" "}
-                {props.numOfActions ? props.block.timestamp : "Loading......"}
+                {props.numOfActions ? props.numOfActions : "OOPS! Data currently not available"}
               </Typography>
             </CardContent>
           </Card>
