@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import Panel from "./Panel";
+import BlockPanel from "./BlockPanel";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
@@ -8,11 +8,9 @@ class PanelContainer extends Component {
   constructor(props) {
     super();
     this.state = {
-      blockSet: new Set(),
-      numOfBlocks: 0,
-      blocks: [],
-      timestamps: [],
-      numOfActions: [],
+      capacity: 3,
+      blocksMap: new Map(),
+      actionsMap: new Map(),
       buttonClicked: false,
     };
   }
@@ -22,79 +20,42 @@ class PanelContainer extends Component {
       ...this.state,
       buttonClicked: true,
     });
-    let url_get_info = "https://eos.greymass.com/v1/chain/get_info";
+
+    const url_get_info = "https://eos.greymass.com/v1/chain/get_info";
+    let currBlockId = null;
+    let currBlocksMap = this.state.blocksMap;
+    let currActionsMap = this.state.actionsMap;
+    let blocksMapKeys = currBlocksMap.keys();
+    let actionsMapKeys = currActionsMap.keys();
+
     axios
       .get(url_get_info)
       .then((res) => {
-        if (!this.state.blockSet.has(res.data.last_irreversible_block_id)) {
-          if (this.state.blockSet.size < 2) {
-            console.log("s1");
-            let currBlockSet = this.state.blockSet;
-            currBlockSet.add(res.data.last_irreversible_block_id);
-            this.setState({
-              ...this.state,
-              blockSet: currBlockSet,
-              numOfBlocks: this.state.numOfBlocks + 1,
-              blocks: [...this.state.blocks, res.data],
-            });
-          } else {
-            console.log("s2");
-            let currBlocks = this.state.blocks;
-            const leastUsedBlock = currBlocks.shift(); // remove id from state
+        currBlockId = res.data.last_irreversible_block_id;
 
-            let currBlockSet = this.state.blockSet;
-            currBlockSet.delete(leastUsedBlock.last_irreversible_block_id); // remove id from set
-            currBlockSet.add(res.data.last_irreversible_block_id); // add id to set
-
-            let currTimestamps = this.state.timestamps;
-            let currNumOfActions = this.state.numOfActions;
-            currTimestamps.shift();
-            currNumOfActions.shift();
-            this.setState({
-              ...this.state,
-              blockSet: currBlockSet,
-              timestamps: [...currTimestamps],
-              numOfActions: [...currNumOfActions],
-              blocks: [...currBlocks, res.data],
-            });
-          }
-        } else {
-          console.log("s3");
-          let currBlocks = this.state.blocks;
-          let indexOfBlock = 0;
-          currBlocks.forEach((block, index) => {
-            if (
-              block.last_irreversible_block_id ===
-              res.data.last_irreversible_block_id
-            ) {
-              indexOfBlock = index;
-            }
-          });
-          let currTimestamps = this.state.timestamps;
-          let currNumOfActions = this.state.numOfActions;
-          currTimestamps.splice(indexOfBlock, 1);
-          currNumOfActions.splice(indexOfBlock, 1);
-
-          const newBlocks = currBlocks.filter(
-            (block) =>
-              block.last_irreversible_block_id !==
-              res.data.last_irreversible_block_id
-          );
-          this.setState({
-            ...this.state,
-            timestamps: [...currTimestamps],
-            numOfActions: [...currNumOfActions],
-            blocks: [...newBlocks, res.data],
-          });
+        if (currBlocksMap.has(currBlockId)) {
+          currBlocksMap.delete(currBlockId);
+          currActionsMap.delete(currBlockId);
         }
+        currBlocksMap.set(currBlockId, {});
+        currActionsMap.set(currBlockId, null);
+
+        blocksMapKeys = currBlocksMap.keys();
+        actionsMapKeys = currActionsMap.keys();
+
+        while (currBlocksMap.size > this.state.capacity) {
+          currBlocksMap.delete(blocksMapKeys.next().value);
+          currActionsMap.delete(actionsMapKeys.next().value);
+        }
+
         const options = {
           headers: { "X-Custom-Header": "value" },
           data: {
-            block_num_or_id: res.data.last_irreversible_block_id,
+            block_num_or_id: currBlockId,
           },
         };
 
-        let url_get_block =
+        const url_get_block =
           "https://cors-anywhere.herokuapp.com/https://eos.greymass.com/v1/chain/get_block";
         return axios.post(url_get_block, {}, options);
       })
@@ -113,22 +74,25 @@ class PanelContainer extends Component {
               response.data.transactions[i].trx.transaction.actions.length;
           }
         }
-        // console.log(response.data.timestamp);
+
+        currBlocksMap.set(currBlockId, response.data);
+        currActionsMap.set(currBlockId, counter);
+
         this.setState({
           ...this.state,
-          timestamps: [...this.state.timestamps, response.data.timestamp],
-          numOfActions: [...this.state.numOfActions, counter],
+          blocksMap: currBlocksMap,
+          actionsMap: currActionsMap,
           buttonClicked: false,
         });
-
-        console.log("numOfActions:", this.state.numOfActions);
-        console.log("timestamps:", this.state.timestamps);
       })
       .catch((err) => {
+        currBlocksMap.set(currBlockId, "Not available");
+        currActionsMap.set(currBlockId, "Not available");
+
         this.setState({
           ...this.state,
-          timestamps: [...this.state.timestamps, "No data"],
-          numOfActions: [...this.state.numOfActions, "No data"],
+          blocksMap: currBlocksMap,
+          actionsMap: currActionsMap,
           buttonClicked: false,
         });
       });
@@ -139,28 +103,36 @@ class PanelContainer extends Component {
   }
 
   render() {
-    this.panels = this.state.blocks.map((block, index) => (
-      <Panel key={index} block={block} timestamp={this.state.timestamps[index]} numOfActions={this.state.numOfActions[index]}></Panel>
+    let blocks = [...this.state.blocksMap.values()];
+    let actions = [...this.state.actionsMap.values()];
+
+    this.panels = blocks.map((block, index) => (
+      <BlockPanel
+        key={index}
+        block={block}
+        numOfActions={actions[index]}
+      ></BlockPanel>
     ));
 
-    if (this.state.blocks.length !== 0) {
-      // console.log("Hi", this.state.blocks);
+    if (this.state.blocksMap.size !== 0 && this.state.actionsMap.length !== 0) {
       return (
         <div>
           <div>{this.panels}</div>
+          {this.state.buttonClicked ? (
+            <CircularProgress />
+          ) : (
             <Button
               variant="contained"
               size="large"
               onClick={this.getBlock.bind(this)}
-              disabled={this.state.buttonClicked?true:false}
+              disabled={this.state.buttonClicked ? true : false}
             >
               LOAD
             </Button>
+          )}
         </div>
       );
-    }
-
-    if (this.state.blocks.length === 0) {
+    } else {
       return (
         <div>
           <CircularProgress />
