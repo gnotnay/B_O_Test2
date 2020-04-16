@@ -38,6 +38,10 @@ export default function BlockPanel(props) {
           <TurnedInTwoToneIcon />
           <Card className={classes.root}>
             <CardContent>
+            <Typography className={classes.heading} align="left">
+                <b>Recent Block Index:</b>{" "}
+                {props.indexNum}
+              </Typography>
               <Typography className={classes.heading} align="left">
                 <b>Block ID:</b>{" "}
                 {props.block.id ? props.block.id : "OOPS! Data currently not available"}

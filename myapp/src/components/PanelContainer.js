@@ -3,15 +3,15 @@ import axios from "axios";
 import BlockPanel from "./BlockPanel";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 class PanelContainer extends Component {
   constructor(props) {
     super();
     this.state = {
-      capacity: 3,
-      blocksMap: new Map(),
-      actionsMap: new Map(),
+      capacity: 10,
+      blocks: [],
+      actions: [],
       buttonClicked: false,
     };
   }
@@ -19,88 +19,156 @@ class PanelContainer extends Component {
   getBlock() {
     this.setState({
       ...this.state,
+      blocks: [],
+      actions: [],
       buttonClicked: true,
     });
 
     const url_get_info = "https://eos.greymass.com/v1/chain/get_info";
-    let currBlockId = null;
-    let currBlocksMap = this.state.blocksMap;
-    let currActionsMap = this.state.actionsMap;
-    let blocksMapKeys = currBlocksMap.keys();
-    let actionsMapKeys = currActionsMap.keys();
-
+    let currBlockNum = null;
     axios
       .get(url_get_info)
       .then((res) => {
-        currBlockId = res.data.last_irreversible_block_id;
+        currBlockNum = res.data.last_irreversible_block_num;
 
-        if (currBlocksMap.has(currBlockId)) {
-          currBlocksMap.delete(currBlockId);
-          currActionsMap.delete(currBlockId);
-        }
-        currBlocksMap.set(currBlockId, {});
-        currActionsMap.set(currBlockId, null);
-
-        blocksMapKeys = currBlocksMap.keys();
-        actionsMapKeys = currActionsMap.keys();
-
-        while (currBlocksMap.size > this.state.capacity) {
-          currBlocksMap.delete(blocksMapKeys.next().value);
-          currActionsMap.delete(actionsMapKeys.next().value);
-        }
-
-        const options = {
+        const optionsOne = {
           headers: { "X-Custom-Header": "value" },
           data: {
-            block_num_or_id: currBlockId,
+            block_num_or_id: currBlockNum,
+          },
+        };
+
+        const optionsTwo = {
+          headers: { "X-Custom-Header": "value" },
+          data: {
+            block_num_or_id: currBlockNum - 1,
+          },
+        };
+
+        const optionsThree = {
+          headers: { "X-Custom-Header": "value" },
+          data: {
+            block_num_or_id: currBlockNum - 2,
+          },
+        };
+
+        const optionsFour = {
+          headers: { "X-Custom-Header": "value" },
+          data: {
+            block_num_or_id: currBlockNum - 3,
+          },
+        };
+
+        const optionsFive = {
+          headers: { "X-Custom-Header": "value" },
+          data: {
+            block_num_or_id: currBlockNum - 4,
+          },
+        };
+
+        const optionsSix = {
+          headers: { "X-Custom-Header": "value" },
+          data: {
+            block_num_or_id: currBlockNum - 5,
+          },
+        };
+
+        const optionsSeven = {
+          headers: { "X-Custom-Header": "value" },
+          data: {
+            block_num_or_id: currBlockNum - 6,
+          },
+        };
+
+        const optionsEight = {
+          headers: { "X-Custom-Header": "value" },
+          data: {
+            block_num_or_id: currBlockNum - 7,
+          },
+        };
+
+        const optionsNine = {
+          headers: { "X-Custom-Header": "value" },
+          data: {
+            block_num_or_id: currBlockNum - 8,
+          },
+        };
+
+        const optionsTen = {
+          headers: { "X-Custom-Header": "value" },
+          data: {
+            block_num_or_id: currBlockNum - 9,
           },
         };
 
         const url_get_block =
           "https://cors-anywhere.herokuapp.com/https://eos.greymass.com/v1/chain/get_block";
-        return axios.post(url_get_block, {}, options);
+
+        const requestOne = axios.post(url_get_block, {}, optionsOne);
+        const requestTwo = axios.post(url_get_block, {}, optionsTwo);
+        const requestThree = axios.post(url_get_block, {}, optionsThree);
+        const requestFour = axios.post(url_get_block, {}, optionsFour);
+        const requestFive = axios.post(url_get_block, {}, optionsFive);
+        const requestSix = axios.post(url_get_block, {}, optionsSix);
+        const requestSeven = axios.post(url_get_block, {}, optionsSeven);
+        const requestEight = axios.post(url_get_block, {}, optionsEight);
+        const requestNine = axios.post(url_get_block, {}, optionsNine);
+        const requestTen = axios.post(url_get_block, {}, optionsTen);
+
+        // return axios.post(url_get_block, {}, options);
+        return axios.all([
+          requestOne,
+          requestTwo,
+          requestThree,
+          requestFour,
+          requestFive,
+          requestSix,
+          requestSeven,
+          requestEight,
+          requestNine,
+          requestTen,
+        ]);
       })
-      .then((response) => {
-        let counter = 0;
+      .then((responses) => {
+        responses.forEach((response) => {
+          let actionsCounter = 0;
 
-        for (let i = 0; i < response.data.transactions.length; i++) {
-          if (
-            response.data.transactions[i].hasOwnProperty("trx") &&
-            response.data.transactions[i].trx.hasOwnProperty("transaction") &&
-            response.data.transactions[i].trx.transaction.hasOwnProperty(
-              "actions"
-            )
-          ) {
-            counter +=
-              response.data.transactions[i].trx.transaction.actions.length;
+          for (let i = 0; i < response.data.transactions.length; i++) {
+            if (
+              response.data.transactions[i].hasOwnProperty("trx") &&
+              response.data.transactions[i].trx.hasOwnProperty("transaction") &&
+              response.data.transactions[i].trx.transaction.hasOwnProperty(
+                "actions"
+              )
+            ) {
+              actionsCounter +=
+                response.data.transactions[i].trx.transaction.actions.length;
+            }
           }
-        }
 
-        currBlocksMap.set(currBlockId, response.data);
-        currActionsMap.set(currBlockId, counter);
-
-        this.setState({
-          ...this.state,
-          blocksMap: currBlocksMap,
-          actionsMap: currActionsMap,
-          buttonClicked: false,
+          this.setState({
+            ...this.state,
+            blocks: [...this.state.blocks, response.data],
+            actions: [...this.state.actions, actionsCounter],
+            buttonClicked: false,
+          });
         });
       })
       .catch((err) => {
-        currBlocksMap.set(currBlockId, "OOPS! Data is unavailable");
-        currActionsMap.set(currBlockId, "OOPS! Data is unavailable");
+        // currBlocksMap.set(currBlockNum, "OOPS! Data is unavailable");
+        // currActionsMap.set(currBlockNum, "OOPS! Data is unavailable");
 
         // while (currBlocksMap.size > this.state.capacity) {
         //   currBlocksMap.delete(blocksMapKeys.next().value);
         //   currActionsMap.delete(actionsMapKeys.next().value);
         // }
 
-        this.setState({
-          ...this.state,
-          blocksMap: currBlocksMap,
-          actionsMap: currActionsMap,
-          buttonClicked: false,
-        });
+        // this.setState({
+        //   ...this.state,
+        //   blocksMap: currBlocksMap,
+        //   actionsMap: currActionsMap,
+        //   buttonClicked: false,
+        // });
       });
   }
 
@@ -109,18 +177,18 @@ class PanelContainer extends Component {
   }
 
   render() {
-    let blocks = [...this.state.blocksMap.values()];
-    let actions = [...this.state.actionsMap.values()];
+    // console.log("blocks", this.state.blocks);
 
-    this.panels = blocks.map((block, index) => (
+    this.panels = this.state.blocks.map((block, index) => (
       <BlockPanel
         key={index}
+        indexNum={index + 1}
         block={block}
-        numOfActions={actions[index]}
+        numOfActions={this.state.actions[index]}
       ></BlockPanel>
     ));
 
-    if (this.state.blocksMap.size !== 0 && this.state.actionsMap.length !== 0) {
+    if (this.state.blocks.size !== 0) {
       return (
         <div>
           <div>{this.panels}</div>
