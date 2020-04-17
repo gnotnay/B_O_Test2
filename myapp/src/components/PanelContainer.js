@@ -119,15 +119,15 @@ class PanelContainer extends Component {
         // return axios.post(url_get_block, {}, options);
         return axios.all([
           requestOne,
-          // requestTwo,
-          // requestThree,
-          // requestFour,
-          // requestFive,
-          // requestSix,
-          // requestSeven,
-          // requestEight,
-          // requestNine,
-          // requestTen,
+          requestTwo,
+          requestThree,
+          requestFour,
+          requestFive,
+          requestSix,
+          requestSeven,
+          requestEight,
+          requestNine,
+          requestTen,
         ]);
       })
       .then((responses) => {
@@ -156,7 +156,6 @@ class PanelContainer extends Component {
         });
       })
       .catch((err) => {
-        
         this.setState({
           ...this.state,
           blocks: [...this.state.blocks, "OOPS! Data is unavailable"],
@@ -185,9 +184,9 @@ class PanelContainer extends Component {
     if (this.state.blocks.size !== 0) {
       return (
         <div>
-          <div>{this.panels}</div>
+          <div data-testid="resolved">{this.panels}</div>
           {this.state.buttonClicked ? (
-            <LinearProgress variant="query" />
+            <LinearProgress variant="query" data-testid="loading-LinearProgress"/>
           ) : (
             <div
               style={{
@@ -196,11 +195,13 @@ class PanelContainer extends Component {
                 alignItems: "center",
               }}
             >
+              {/* <span data-testid="greating">{data.greeting}</span> */}
               <Button
                 variant="contained"
                 size="large"
                 onClick={this.getBlock.bind(this)}
                 disabled={this.state.buttonClicked ? true : false}
+                data-testid="button-load"
               >
                 LOAD
               </Button>

@@ -21,16 +21,17 @@ export default function Menu() {
   return (
     <div className={classes.root}>
       <AppBar position="static" color="transparent">
-        <Toolbar variant="dense">
+        <Toolbar variant="dense" data-testid="Toolbar">
           <IconButton
             edge="start"
             className={classes.menuButton}
             color="inherit"
             aria-label="menu"
+            data-testid="IconButton"
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" color="inherit">
+          <Typography variant="h6" color="inherit" data-testid="function-name">
             Most Recent Block
           </Typography>
         </Toolbar>

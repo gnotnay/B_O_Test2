@@ -3,8 +3,10 @@ import { render } from "@testing-library/react";
 import DetailList from "./DetailList";
 
 test("renders DetailList", () => {
-  // TestCase #1
-  const { rerender, getByText, getAllByText } = render(
+  /**
+   * TestCase #1
+   */
+  const { rerender, getByText } = render(
     <DetailList
       blockDetails={{
         timestamp: "2020-04-15T22:51:23.500",
@@ -43,7 +45,9 @@ test("renders DetailList", () => {
   const linkElementData6 = getByText(/3319449106/i);
   expect(linkElementData6).toBeInTheDocument();
 
-  // TestCase #2
+  /**
+   * TestCase #2
+   */
   rerender(
     <DetailList
       blockDetails={{
