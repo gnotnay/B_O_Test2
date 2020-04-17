@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ExpansionPanel from "@material-ui/core/ExpansionPanel";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
@@ -13,6 +13,7 @@ import CardContent from "@material-ui/core/CardContent";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
+    wordWrap: "break-word" /* Internet Explorer 5.5+ */,
   },
   heading: {
     fontSize: theme.typography.pxToRem(17),
@@ -38,13 +39,14 @@ export default function BlockPanel(props) {
           <TurnedInTwoToneIcon />
           <Card className={classes.root}>
             <CardContent>
-            <Typography className={classes.heading} align="left">
-                <b>Recent Block Index:</b>{" "}
-                {props.indexNum}
+              <Typography className={classes.heading} align="left">
+                <b>Recent Block Index:</b> {props.indexNum}
               </Typography>
               <Typography className={classes.heading} align="left">
                 <b>Block ID:</b>{" "}
-                {props.block.id ? props.block.id : "OOPS! Data currently not available"}
+                {props.block.id
+                  ? props.block.id
+                  : "OOPS! Data currently not available"}
               </Typography>
               <Typography className={classes.heading} align="left">
                 <b>Timestamp:</b>{" "}
@@ -54,12 +56,14 @@ export default function BlockPanel(props) {
               </Typography>
               <Typography className={classes.heading} align="left">
                 <b>Actions:</b>{" "}
-                {props.numOfActions ? props.numOfActions : "OOPS! Data currently not available"}
+                {props.numOfActions
+                  ? props.numOfActions
+                  : "OOPS! Data currently not available"}
               </Typography>
             </CardContent>
           </Card>
         </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
+        <ExpansionPanelDetails className={classes.details}>
           <DetailList blockDetails={props.block}></DetailList>
         </ExpansionPanelDetails>
       </ExpansionPanel>

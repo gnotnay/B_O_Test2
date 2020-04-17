@@ -103,6 +103,7 @@ class PanelContainer extends Component {
 
         const url_get_block =
           "https://cors-anywhere.herokuapp.com/https://eos.greymass.com/v1/chain/get_block";
+        // "https://eos.greymass.com/v1/chain/get_block";
 
         const requestOne = axios.post(url_get_block, {}, optionsOne);
         const requestTwo = axios.post(url_get_block, {}, optionsTwo);
@@ -155,20 +156,13 @@ class PanelContainer extends Component {
         });
       })
       .catch((err) => {
-        // currBlocksMap.set(currBlockNum, "OOPS! Data is unavailable");
-        // currActionsMap.set(currBlockNum, "OOPS! Data is unavailable");
-
-        // while (currBlocksMap.size > this.state.capacity) {
-        //   currBlocksMap.delete(blocksMapKeys.next().value);
-        //   currActionsMap.delete(actionsMapKeys.next().value);
-        // }
-
-        // this.setState({
-        //   ...this.state,
-        //   blocksMap: currBlocksMap,
-        //   actionsMap: currActionsMap,
-        //   buttonClicked: false,
-        // });
+        
+        this.setState({
+          ...this.state,
+          blocks: [...this.state.blocks, "OOPS! Data is unavailable"],
+          actions: [...this.state.actions, "OOPS! Data is unavailable"],
+          buttonClicked: false,
+        });
       });
   }
 
@@ -195,14 +189,22 @@ class PanelContainer extends Component {
           {this.state.buttonClicked ? (
             <LinearProgress variant="query" />
           ) : (
-            <Button
-              variant="contained"
-              size="large"
-              onClick={this.getBlock.bind(this)}
-              disabled={this.state.buttonClicked ? true : false}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
-              LOAD
-            </Button>
+              <Button
+                variant="contained"
+                size="large"
+                onClick={this.getBlock.bind(this)}
+                disabled={this.state.buttonClicked ? true : false}
+              >
+                LOAD
+              </Button>
+            </div>
           )}
         </div>
       );
