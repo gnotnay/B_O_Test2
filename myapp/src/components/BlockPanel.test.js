@@ -109,4 +109,28 @@ test("renders BlockPanel", () => {
     /SIG_K1_Jzv2kNQPcDuvzMThEUQ5fCJ5Qpn5xvbTZh3uE4kYUzzoksWMKbqQNq2xweSQNUvMFhCNGnb6VTo1Qef4u2FYbV15UYs28q/i
   );
   expect(linkElementData16).toBeInTheDocument();
+
+  // TestCase #3: error handling
+  rerender(
+    <BlockPanel
+      indexNum={"#1"}
+      block={"OOPS! Data is unavailable"}
+      numOfActions={"OOPS! Data is unavailable"}
+    />
+  )
+
+  const linkElementLabel21 = getByText(/Recent Block Index:/i);
+  expect(linkElementLabel21).toBeInTheDocument();
+  const linkElementLabel22 = getByText(/Block ID:/i);
+  expect(linkElementLabel22).toBeInTheDocument();
+  const linkElementLabel23 = getByText(/Timestamp:/i);
+  expect(linkElementLabel23).toBeInTheDocument();
+  const linkElementLabel24 = getByText(/Actions:/i);
+  expect(linkElementLabel24).toBeInTheDocument();
+
+  const linkElementData21 = getByText(/#1/i);
+  expect(linkElementData21).toBeInTheDocument();
+  const linkElementData22 = getAllByText(/OOPS! Data is unavailable/i);
+  expect(linkElementData22[0]).toBeInTheDocument();
+  expect(linkElementData22[1]).toBeInTheDocument();
 });

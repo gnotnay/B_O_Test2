@@ -119,15 +119,15 @@ class PanelContainer extends Component {
         // return axios.post(url_get_block, {}, options);
         return axios.all([
           requestOne,
-          // requestTwo,
-          // requestThree,
-          // requestFour,
-          // requestFive,
-          // requestSix,
-          // requestSeven,
-          // requestEight,
-          // requestNine,
-          // requestTen,
+          requestTwo,
+          requestThree,
+          requestFour,
+          requestFive,
+          requestSix,
+          requestSeven,
+          requestEight,
+          requestNine,
+          requestTen,
         ]);
       })
       .then((responses) => {
@@ -187,7 +187,7 @@ class PanelContainer extends Component {
         <div>
           <div>{this.panels}</div>
           {this.state.buttonClicked ? (
-            <LinearProgress variant="query" />
+            <LinearProgress variant="query" data-testid="LinearProgress-display"/>
           ) : (
             <div
               style={{
