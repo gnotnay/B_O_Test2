@@ -13,21 +13,17 @@ import CardContent from "@material-ui/core/CardContent";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
+    wordBreak: "break-all"
   },
   heading: {
     fontSize: theme.typography.pxToRem(17),
     flexBasis: "20%",
     flexShrink: 0,
-    wordBreak: "break-all",
-  },
-  secondaryHeading: {
-    fontSize: theme.typography.pxToRem(16),
-    color: theme.palette.text.secondary,
-    wordBreak: "break-all",
+    wordBreak: "break-all"
   },
   details: {
-    fontSize: theme.typography.pxToRem(16),
-  }
+    wordBreak: "break-all"
+  },
 }));
 
 export default function BlockPanel(props) {

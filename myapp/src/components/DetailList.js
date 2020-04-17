@@ -6,7 +6,7 @@ const DetailList = (props) => {
   return (
     <JSONPretty
       data={props.blockDetails}
-      style={{ wordBreak: "break-all" }}
+      theme={JSONPrettyMon}
     ></JSONPretty>
   );
 };
