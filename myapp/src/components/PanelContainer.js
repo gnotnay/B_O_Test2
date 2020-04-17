@@ -119,15 +119,15 @@ class PanelContainer extends Component {
         // return axios.post(url_get_block, {}, options);
         return axios.all([
           requestOne,
-          requestTwo,
-          requestThree,
-          requestFour,
-          requestFive,
-          requestSix,
-          requestSeven,
-          requestEight,
-          requestNine,
-          requestTen,
+          // requestTwo,
+          // requestThree,
+          // requestFour,
+          // requestFive,
+          // requestSix,
+          // requestSeven,
+          // requestEight,
+          // requestNine,
+          // requestTen,
         ]);
       })
       .then((responses) => {
