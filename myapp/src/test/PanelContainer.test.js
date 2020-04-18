@@ -2,7 +2,7 @@ import React from "react";
 import { render, cleanup, waitForElement } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import axiosMock from "../__mocks__/axios";
-import PanelContainer from "./PanelContainer";
+import PanelContainer from "../components/PanelContainer";
 
 afterEach(cleanup);
 

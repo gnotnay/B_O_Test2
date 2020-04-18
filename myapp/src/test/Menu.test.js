@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import Menu from './Menu';
+import Menu from '../components/Menu';
 
 test('renders AppBar', () => {
   const { getByText, getByTestId } = render(<Menu />);

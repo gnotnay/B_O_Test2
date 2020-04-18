@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import DetailList from "./DetailList";
+import DetailList from "../components/DetailList";
 
 test("renders DetailList", () => {
   /**

@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import BlockPanel from "./BlockPanel";
+import BlockPanel from "../components/BlockPanel";
 
 test("renders BlockPanel", () => {
   // TestCase #1
